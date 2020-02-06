@@ -6,7 +6,7 @@ import { version } from "./rise-data-twitter-version.js";
 export default class RiseDataTwitter extends RiseElement {
   static get template() {
     // TODO: this is temporary for skeleton
-    return html`<h1>Rise Data Twitter</h1>`;
+    return html`<h1>Rise Data Twitter component</h1>`;
   }
 
   static get properties() {
