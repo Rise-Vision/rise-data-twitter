@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, minimum-scale=1, initial-scale=1, user-scalable=yes">
+
+    <title>rise-data-twitter test</title>
+
+    <script src="../../node_modules/@webcomponents/webcomponentsjs/webcomponents-loader.js"></script>
+    <script src="../../node_modules/@polymer/test-fixture/test-fixture.js"></script>
+    <script src="../../node_modules/mocha/mocha.js"></script>
+    <script src="../../node_modules/chai/chai.js"></script>
+    <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
+    <script src="../../node_modules/sinon/pkg/sinon.js"></script>
+
+    <script type="text/javascript">
+      RisePlayerConfiguration = {
+        isConfigured: () => true
+      };
+    </script>
+
+    <script type="module" src="../../src/rise-data-twitter.js"></script>
+  </head>
+  <body>
+    <test-fixture id="test-block">
+      <template>
+        <rise-data-twitter></rise-data-twitter>
+      </template>
+    </test-fixture>
+
+    <script type="module">
+      suite("rise-data-twitter", () => {
+        let sandbox = sinon.createSandbox();
+        let element, clock, riseElement;
+
+        setup(() => {
+          RisePlayerConfiguration.Logger = {
+            info: () => {},
+            warning: () => {},
+            error: sinon.spy()
+          };
+
+          RisePlayerConfiguration.isPreview = () => {
+            return false;
+          };
+
+          clock = sinon.useFakeTimers();
+
+          element = fixture("test-block");
+
+          riseElement = element.__proto__.__proto__;
+
+          sandbox.spy(riseElement, '_sendEvent');
+          sandbox.stub(riseElement, '_setUptimeError');
+        });
+
+        teardown(()=>{
+          sandbox.restore();
+          clock.restore();
+        });
+
+        suite("properties", () => {
+          test("should test element exists", () => {
+            assert(element);
+          });
+        });
+      });
+    </script>
+  </body>
+</html>
