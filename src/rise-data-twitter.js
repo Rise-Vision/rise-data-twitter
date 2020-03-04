@@ -2,6 +2,7 @@
 
 import { html } from "@polymer/polymer";
 import { RiseElement } from "rise-common-component/src/rise-element.js";
+import { config } from "./rise-data-twitter-config.js";
 import { version } from "./rise-data-twitter-version.js";
 
 export default class RiseDataTwitter extends RiseElement {
