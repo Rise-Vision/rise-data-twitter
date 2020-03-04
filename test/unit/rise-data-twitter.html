@@ -15,7 +15,8 @@
 
     <script type="text/javascript">
       RisePlayerConfiguration = {
-        isConfigured: () => true
+        isConfigured: () => true,
+        getCompanyId: () => "xxxx-yyyy"
       };
     </script>
 
@@ -31,7 +32,7 @@
     <script type="module">
       suite("rise-data-twitter", () => {
         let sandbox = sinon.createSandbox();
-        let element, clock, riseElement;
+        let element, clock, riseElement, fetchMixin;
 
         setup(() => {
           RisePlayerConfiguration.Logger = {
@@ -48,7 +49,8 @@
 
           element = fixture("test-block");
 
-          riseElement = element.__proto__.__proto__;
+          fetchMixin = element.__proto__.__proto__;
+          riseElement = element.__proto__.__proto__.__proto__.__proto__;
 
           sandbox.spy(riseElement, '_sendEvent');
           sandbox.stub(riseElement, '_setUptimeError');
@@ -164,6 +166,88 @@
           } );
 
         } );
+
+        suite( "_loadTweets", () => {
+          setup( () => {
+            sandbox.stub(element, "_getUrl").returns("https://service");
+            sandbox.stub(fetchMixin, "fetch");
+          });
+
+          test( "should call fetch if it is not initial start and account is set", () => {
+            element._initialStart = false;
+            element.account = "@RiseVision";
+            sandbox.resetHistory();
+
+            element._loadTweets();
+
+            assert.isTrue(element._getUrl.calledOnce);
+
+            assert.isTrue(fetchMixin.fetch.calledOnce);
+            assert.equal(fetchMixin.fetch.lastCall.args[0], "https://service");
+          });
+
+          test( "should not call fetch if it's initial start", () => {
+            element._initialStart = true;
+            element.account = "@RiseVision";
+            sandbox.resetHistory();
+
+            element._loadTweets();
+
+            assert.isFalse(element._getUrl.called);
+            assert.isFalse(fetchMixin.fetch.called);
+          });
+
+          test( "should not call fetch if account is not set", () => {
+            element._initialStart = false;
+
+            element._loadTweets();
+
+            assert.isFalse(element._getUrl.called);
+            assert.isFalse(fetchMixin.fetch.called);
+          });
+        });
+
+        suite( "_getUrl", () => {
+          test( "should build URL", () => {
+            element.account = "RiseVision";
+
+            const url = element._getUrl();
+
+            assert.equal(url, "https://services-stage.risevision.com/twitter/get-tweets?companyId=xxxx-yyyy&username=RiseVision&count=25");
+          });
+
+          test( "should not include '@' in URL", () => {
+            element.account = "@RiseVision";
+
+            const url = element._getUrl();
+
+            assert.equal(url, "https://services-stage.risevision.com/twitter/get-tweets?companyId=xxxx-yyyy&username=RiseVision&count=25");
+          });
+        });
+
+        suite( "_handleResponse", () => {
+          test( "should handle response", () => {
+            const json = sandbox.stub().resolves({});
+
+            return element._handleResponse({json})
+            .then(() => {
+              assert.isTrue(json.calledOnce);
+            });
+          });
+        });
+
+        suite( "_handleError", () => {
+          setup( () => {
+            sandbox.stub( console, "error" );
+          });
+
+          test( "should handle error", () => {
+            element._handleError(new Error("error"));
+
+            assert.isTrue( console.error.calledOnce );
+          });
+        });
+
       });
     </script>
   </body>
