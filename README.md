@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`rise-data-twitter` is a Polymer 3 Web Component that provides twits from a configurable Twitter username.
+`rise-data-twitter` is a Polymer 3 Web Component that provides tweets from a configurable Twitter account.
 
 ## Usage
 
