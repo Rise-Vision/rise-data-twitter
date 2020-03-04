@@ -2,10 +2,15 @@
 
 import { html } from "@polymer/polymer";
 import { RiseElement } from "rise-common-component/src/rise-element.js";
+import { CacheMixin } from "rise-common-component/src/cache-mixin.js";
+import { FetchMixin } from "rise-common-component/src/fetch-mixin.js";
+
 import { config } from "./rise-data-twitter-config.js";
 import { version } from "./rise-data-twitter-version.js";
 
-export default class RiseDataTwitter extends RiseElement {
+const fetchBase = CacheMixin(RiseElement);
+
+export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   static get template() {
     // TODO: this is temporary for skeleton
     return html`<h1>Rise Data Twitter component</h1>`;
@@ -51,6 +56,17 @@ export default class RiseDataTwitter extends RiseElement {
 
     this.addEventListener( "rise-presentation-play", () => this._reset());
     this.addEventListener( "rise-presentation-stop", () => this._stop());
+
+    super.initFetch({
+      refresh: 1000 * 60 * 30, // it will be overriden by service response headers
+      retry: 1000 * 60 * 5,
+      cooldown: 1000 * 60 * 10
+    }, this._handleResponse, this._handleError);
+
+    super.initCache({
+      name: this.tagName.toLowerCase(),
+      expiry: -1
+    });
   }
 
   _reset() {
@@ -61,7 +77,7 @@ export default class RiseDataTwitter extends RiseElement {
   }
 
   _start() {
-    // TODO: coming soon ..
+    this._loadTweets();
   }
 
   _stop() {
@@ -77,6 +93,42 @@ export default class RiseDataTwitter extends RiseElement {
       this._start();
     }
   }
+
+  _getUrl() {
+    const companyId = RisePlayerConfiguration.getCompanyId();
+    const username = this.account && this.account.indexOf("@") === 0 ?
+      this.account.substring(1) : this.account;
+
+    return `${
+      config.twitterServiceURL
+    }/get-tweets?companyId=${
+      companyId
+    }&username=${
+      username
+    }&count=${
+      this.maxitems
+    }`;
+  }
+
+  _loadTweets() {
+    if (this.account) {
+      super.fetch(this._getUrl(), {
+        headers: { "X-Requested-With": "rise-data-twitter" }
+      });
+    }
+  }
+
+  _handleResponse(response) {
+    return response.json()
+      .then( json => {
+        console.log(json); // TODO: send as event
+      });
+  }
+
+  _handleError(error) {
+    console.error(error); // TODO: handle properly
+  }
+
 }
 
 customElements.define("rise-data-twitter", RiseDataTwitter);
