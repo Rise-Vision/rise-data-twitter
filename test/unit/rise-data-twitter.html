@@ -195,7 +195,7 @@
 
         suite( "_getUrl", () => {
           test( "should build URL", () => {
-            element.account = "RiseVision";
+            element.username = "RiseVision";
 
             const url = element._getUrl();
 
@@ -203,7 +203,7 @@
           });
 
           test( "should not include '@' in URL", () => {
-            element.account = "@RiseVision";
+            element.username = "@RiseVision";
 
             const url = element._getUrl();
 

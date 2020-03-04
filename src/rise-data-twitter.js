@@ -22,7 +22,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
        * The Twitter handle whose content will be retrieved. The @ symbol may be omitted.
        * If not provided at design time, users need to provide it on Attribute Editor.
        */
-      account: {
+      username: {
         type: String,
         value: ""
       },
@@ -40,7 +40,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   // a comma-separated list of one or more dependencies.
   static get observers() {
     return [
-      "_reset(account, maxitems)"
+      "_reset(username, maxitems)"
     ];
   }
 
@@ -96,8 +96,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
   _getUrl() {
     const companyId = RisePlayerConfiguration.getCompanyId();
-    const username = this.account && this.account.indexOf("@") === 0 ?
-      this.account.substring(1) : this.account;
+    const username = this.username && this.username.indexOf("@") === 0 ?
+      this.username.substring(1) : this.username;
 
     return `${
       config.twitterServiceURL
