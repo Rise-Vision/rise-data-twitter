@@ -111,7 +111,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   }
 
   _loadTweets() {
-    if (!this._initialStart && this.account) {
+    if (this.account) {
       super.fetch(this._getUrl(), {
         headers: { "X-Requested-With": "rise-data-twitter" }
       });

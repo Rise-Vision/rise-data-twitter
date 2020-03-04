@@ -173,8 +173,7 @@
             sandbox.stub(fetchMixin, "fetch");
           });
 
-          test( "should call fetch if it is not initial start and account is set", () => {
-            element._initialStart = false;
+          test( "should call fetch if account is set", () => {
             element.account = "@RiseVision";
             sandbox.resetHistory();
 
@@ -186,20 +185,7 @@
             assert.equal(fetchMixin.fetch.lastCall.args[0], "https://service");
           });
 
-          test( "should not call fetch if it's initial start", () => {
-            element._initialStart = true;
-            element.account = "@RiseVision";
-            sandbox.resetHistory();
-
-            element._loadTweets();
-
-            assert.isFalse(element._getUrl.called);
-            assert.isFalse(fetchMixin.fetch.called);
-          });
-
           test( "should not call fetch if account is not set", () => {
-            element._initialStart = false;
-
             element._loadTweets();
 
             assert.isFalse(element._getUrl.called);
