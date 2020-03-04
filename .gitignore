@@ -1,6 +1,7 @@
 build/
 dist/
 node_modules/
+src/rise-data-twitter-config.js
 demo/build/**
 demo/node_modules/**
 coverage/
