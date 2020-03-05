@@ -75,7 +75,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
         RiseDataTwitter.BAD_REQUEST_ERROR, // this component is sending a malformed URL, this is a bug
         RiseDataTwitter.FORBIDDEN_ERROR, // invalid credentials, avoid immediate retries but cooldown will apply in case customer updates credentials in apps editor in the meantime
         RiseDataTwitter.TOO_MANY_REQUESTS_ERROR // quota error, wait until it's outside Twitter's quota window
-      ]
+      ],
+      refreshFromCacheControlHeader: true
     }, this._handleResponse, this._handleError);
 
     super.initCache({
