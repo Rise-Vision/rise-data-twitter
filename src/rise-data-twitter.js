@@ -69,7 +69,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
     super.initFetch({
       refresh: 1000 * 60 * 30,
-      refreshFromCacheControlHeader: true // Cache-Control expiration overrides refresh setting above
+      refreshFromCacheControlHeader: true, // Cache-Control expiration overrides refresh setting above
       retry: 1000 * 60,
       cooldown: 1000 * 60 * 15, // ensures it's outside Twitter's quota window
       avoidRetriesForStatusCodes: [
