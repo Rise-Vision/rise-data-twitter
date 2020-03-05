@@ -44,6 +44,16 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     ];
   }
 
+  static get BAD_REQUEST_ERROR() {
+    return 400;
+  }
+  static get FORBIDDEN_ERROR() {
+    return 403;
+  }
+  static get TOO_MANY_REQUESTS_ERROR() {
+    return 429;
+  }
+
   constructor() {
     super();
 
@@ -59,8 +69,13 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
     super.initFetch({
       refresh: 1000 * 60 * 30, // it will be overriden by service response headers
-      retry: 1000 * 60 * 5,
-      cooldown: 1000 * 60 * 10
+      retry: 1000 * 60,
+      cooldown: 1000 * 60 * 15, // ensures it's outside Twitter's quota window
+      avoidRetriesForStatusCodes: [
+        RiseDataTwitter.BAD_REQUEST_ERROR, // this component is sending a malformed URL, this is a bug
+        RiseDataTwitter.FORBIDDEN_ERROR, // invalid credentials, avoid immediate retries but cooldown will apply in case customer updates credentials in apps editor in the meantime
+        RiseDataTwitter.TOO_MANY_REQUESTS_ERROR // quota error, wait until it's outside Twitter's quota window
+      ]
     }, this._handleResponse, this._handleError);
 
     super.initCache({
