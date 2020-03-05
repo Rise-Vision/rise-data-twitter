@@ -68,15 +68,15 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     this.addEventListener( "rise-presentation-stop", () => this._stop());
 
     super.initFetch({
-      refresh: 1000 * 60 * 30, // it will be overriden by service response headers
+      refresh: 1000 * 60 * 30,
+      refreshFromCacheControlHeader: true // Cache-Control expiration overrides refresh setting above
       retry: 1000 * 60,
       cooldown: 1000 * 60 * 15, // ensures it's outside Twitter's quota window
       avoidRetriesForStatusCodes: [
         RiseDataTwitter.BAD_REQUEST_ERROR, // this component is sending a malformed URL, this is a bug
         RiseDataTwitter.FORBIDDEN_ERROR, // invalid credentials, avoid immediate retries but cooldown will apply in case customer updates credentials in apps editor in the meantime
         RiseDataTwitter.TOO_MANY_REQUESTS_ERROR // quota error, wait until it's outside Twitter's quota window
-      ],
-      refreshFromCacheControlHeader: true
+      ]
     }, this._handleResponse, this._handleError);
 
     super.initCache({
