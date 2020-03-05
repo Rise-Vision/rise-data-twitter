@@ -2,7 +2,7 @@
 
 ## Introduction
 
-`rise-data-twitter` is a Polymer 3 Web Component that provides twits from a configurable Twitter account.
+`rise-data-twitter` is a Polymer 3 Web Component that provides tweets from a configurable Twitter account.
 
 ## Usage
 
@@ -22,13 +22,13 @@ Since this is not a visual component, a listener needs to be registered to proce
 
 ### Attributes
 
-_More attributes to be defined_
-
 This component receives the following list of attributes:
 
 - **id**: (string): Unique HTMLElement id.
 - **label**: (string): Assigns the label to use for the instance of the component in Template Editor.
 - **non-editable**: ( empty / optional ): If present, it indicates this component is not available for customization in the Template Editor.
+- **username**: ( string / optional ): The default username for which the tweets will be requested.
+- **maxitems**: ( integer / optional ): The default number of tweets to request. Defaults to 25.
 
 This component does not support PUD; it will need to be handled by Designers on a per Template basis.
 

@@ -173,8 +173,8 @@
             sandbox.stub(fetchMixin, "fetch");
           });
 
-          test( "should call fetch if account is set", () => {
-            element.account = "@RiseVision";
+          test( "should call fetch if username is set", () => {
+            element.username = "@RiseVision";
             sandbox.resetHistory();
 
             element._loadTweets();
@@ -185,7 +185,7 @@
             assert.equal(fetchMixin.fetch.lastCall.args[0], "https://service");
           });
 
-          test( "should not call fetch if account is not set", () => {
+          test( "should not call fetch if username is not set", () => {
             element._loadTweets();
 
             assert.isFalse(element._getUrl.called);
@@ -195,7 +195,7 @@
 
         suite( "_getUrl", () => {
           test( "should build URL", () => {
-            element.account = "RiseVision";
+            element.username = "RiseVision";
 
             const url = element._getUrl();
 
@@ -203,7 +203,7 @@
           });
 
           test( "should not include '@' in URL", () => {
-            element.account = "@RiseVision";
+            element.username = "@RiseVision";
 
             const url = element._getUrl();
 
