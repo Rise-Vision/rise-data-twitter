@@ -212,25 +212,32 @@
         });
 
         suite( "_handleResponse", () => {
-          test( "should handle response", () => {
+          test( "should handle a valid JSON response", () => {
             const json = sandbox.stub().resolves({});
 
             return element._handleResponse({json})
             .then(() => {
               assert.isTrue(json.calledOnce);
+              assert.equal(riseElement._sendEvent.getCall(0).args[0], "data-update");
+            });
+          });
+
+          test( "should handle an invalid JSON response", () => {
+            const json = sandbox.stub().rejects({});
+
+            return element._handleResponse({json})
+            .then(() => {
+              assert.isTrue(json.calledOnce);
+              assert.equal(riseElement._sendEvent.getCall(0).args[0], "data-error");
             });
           });
         });
 
         suite( "_handleError", () => {
-          setup( () => {
-            sandbox.stub( console, "error" );
-          });
-
           test( "should handle error", () => {
             element._handleError(new Error("error"));
 
-            assert.isTrue( console.error.calledOnce );
+            assert.equal(riseElement._sendEvent.getCall(0).args[0], "request-error");
           });
         });
 
