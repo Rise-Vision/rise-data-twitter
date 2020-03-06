@@ -68,7 +68,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     this.addEventListener( "rise-presentation-stop", () => this._stop());
 
     super.initFetch({
-      refresh: 1000 * 60 * 30, // it will be overriden by service response headers
+      refresh: 1000 * 60 * 30,
+      refreshFromCacheControlHeader: true, // Cache-Control expiration overrides refresh setting above
       retry: 1000 * 60,
       cooldown: 1000 * 60 * 15, // ensures it's outside Twitter's quota window
       avoidRetriesForStatusCodes: [
