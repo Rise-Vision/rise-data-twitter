@@ -137,14 +137,24 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   _handleResponse(response) {
     return response.json()
       .then( json => {
-        console.log(json); // TODO: send as event
+        this._sendTwitterEvent(RiseDataTwitter.EVENT_DATA_UPDATE, json);
+      })
+      .catch( err => {
+        this._sendTwitterEvent(RiseDataTwitter.EVENT_DATA_ERROR, err);
       });
   }
 
-  _handleError(error) {
-    console.error(error); // TODO: handle properly
+  _handleError(err) {
+    let error = err ? err.message : null;
+
+    if (!(err && err.isOffline)) {
+      this._sendTwitterEvent(RiseDataTwitter.EVENT_REQUEST_ERROR, { error });
+    }
   }
 
+  _sendTwitterEvent(name, detail) {
+    super._sendEvent(name, detail);
+  }
 }
 
 customElements.define("rise-data-twitter", RiseDataTwitter);
