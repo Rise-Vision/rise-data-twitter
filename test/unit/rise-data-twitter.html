@@ -250,6 +250,74 @@
           });
         });
 
+        suite( "logTypeForFetchError", () => {
+          test( "should return error type for null error", () => {
+            const eventType = element.logTypeForFetchError();
+
+            assert.equal(eventType, "error");
+          });
+
+          test( "should return error type for error with no status", () => {
+            const eventType = element.logTypeForFetchError({});
+
+            assert.equal(eventType, "error");
+          });
+
+          test( "should return warning type for 403 status", () => {
+            const eventType = element.logTypeForFetchError({ status: 403 });
+
+            assert.equal(eventType, "warning");
+          });
+
+          test( "should return warning type for 429 status", () => {
+            const eventType = element.logTypeForFetchError({ status: 429 });
+
+            assert.equal(eventType, "warning");
+          });
+
+          test( "should return error type for 404 status with no response text", () => {
+            const eventType = element.logTypeForFetchError({ status: 404 });
+
+            assert.equal(eventType, "error");
+          });
+
+          test( "should return warning type for 404 status with username not found", () => {
+            const eventType = element.logTypeForFetchError({
+              status: 404,
+              responseText: "Username not found: 'panchito'"
+            });
+
+            assert.equal(eventType, "warning");
+          });
+
+          test( "should return error type for 404 status with page not found", () => {
+            const eventType = element.logTypeForFetchError({
+              status: 404,
+              responseText: "Page not found"
+            });
+
+            assert.equal(eventType, "error");
+          });
+
+          test( "should return error type for 500 status", () => {
+            const eventType = element.logTypeForFetchError({ status: 500 });
+
+            assert.equal(eventType, "error");
+          });
+
+          test( "should return error type for 400 status", () => {
+            const eventType = element.logTypeForFetchError({ status: 400 });
+
+            assert.equal(eventType, "error");
+          });
+
+          test( "should return error type for 409 status", () => {
+            const eventType = element.logTypeForFetchError({ status: 409 });
+
+            assert.equal(eventType, "error");
+          });
+        });
+
       });
     </script>
   </body>
