@@ -11,10 +11,6 @@ import { version } from "./rise-data-twitter-version.js";
 const fetchBase = CacheMixin(RiseElement);
 
 export default class RiseDataTwitter extends FetchMixin(fetchBase) {
-  static get template() {
-    // TODO: this is temporary for skeleton
-    return html`<h1>Rise Data Twitter component</h1>`;
-  }
 
   static get properties() {
     return {
