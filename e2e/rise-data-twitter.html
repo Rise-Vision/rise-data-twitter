@@ -56,7 +56,7 @@
     riseDataTwitter.addEventListener( 'data-update', data => {
       console.log('Data received', data);
 
-      const tweets = data.detail;
+      const tweets = data.detail.tweets;
 
       twitterData.innerHTML = `${ tweets.length } : ${ tweets[0].user.description }`;
       twitterData.style.display = 'block';
