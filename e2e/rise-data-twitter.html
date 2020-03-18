@@ -58,7 +58,7 @@
 
       const tweets = data.detail.tweets;
 
-      twitterData.innerHTML = `${ tweets.length } : ${ tweets[0].user.description }`;
+      twitterData.innerHTML = `${ tweets.length } : ${ tweets[0].screenName }`;
       twitterData.style.display = 'block';
     });
 
