@@ -150,6 +150,17 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
   _sendTwitterEvent(name, detail) {
     super._sendEvent(name, detail);
+
+    switch (name) {
+      case RiseDataTwitter.EVENT_DATA_ERROR:
+      case RiseDataTwitter.EVENT_REQUEST_ERROR:
+        super._setUptimeError( true );
+        break;
+      case RiseDataTwitter.EVENT_DATA_UPDATE:
+        super._setUptimeError( false );
+        break;
+      default:
+    }
   }
 }
 

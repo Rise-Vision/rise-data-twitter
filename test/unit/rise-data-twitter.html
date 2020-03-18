@@ -219,6 +219,9 @@
             .then(() => {
               assert.isTrue(json.calledOnce);
               assert.equal(riseElement._sendEvent.getCall(0).args[0], "data-update");
+
+              assert.isTrue(riseElement._setUptimeError.calledOnce);
+              assert.isFalse(riseElement._setUptimeError.lastCall.args[0]);
             });
           });
 
@@ -229,6 +232,9 @@
             .then(() => {
               assert.isTrue(json.calledOnce);
               assert.equal(riseElement._sendEvent.getCall(0).args[0], "data-error");
+
+              assert.isTrue(riseElement._setUptimeError.calledOnce);
+              assert.isTrue(riseElement._setUptimeError.lastCall.args[0]);
             });
           });
         });
@@ -238,6 +244,9 @@
             element._handleError(new Error("error"));
 
             assert.equal(riseElement._sendEvent.getCall(0).args[0], "request-error");
+
+            assert.isTrue(riseElement._setUptimeError.calledOnce);
+            assert.isTrue(riseElement._setUptimeError.lastCall.args[0]);
           });
         });
 
