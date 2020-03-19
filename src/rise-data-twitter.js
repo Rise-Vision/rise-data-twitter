@@ -28,6 +28,12 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
       maxitems: {
         type: Number,
         value: 25
+      },
+      /**
+       * A timestamp set to the editor so the Preview component can update whenever credentials are updateed.
+       */
+      credentialsUpdated: {
+        type: Number
       }
     };
   }
@@ -36,7 +42,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   // a comma-separated list of one or more dependencies.
   static get observers() {
     return [
-      "_reset(username, maxitems)"
+      "_reset(username, maxitems, credentialsUpdated)"
     ];
   }
 
