@@ -46,6 +46,9 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   static get FORBIDDEN_ERROR() {
     return 403;
   }
+  static get NOT_FOUND_ERROR() {
+    return 404;
+  }
   static get TOO_MANY_REQUESTS_ERROR() {
     return 429;
   }
@@ -141,7 +144,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   }
 
   _handleError(err) {
-    let error = err ? err.message : null;
+    const error = err ? err.message : null;
 
     if (!(err && err.isOffline)) {
       this._sendTwitterEvent(RiseDataTwitter.EVENT_REQUEST_ERROR, { error });
@@ -162,6 +165,31 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
       default:
     }
   }
+
+  logTypeForFetchError(error) {
+    if (!error || !error.status) {
+      return RiseDataTwitter.LOG_TYPE_ERROR;
+    }
+
+    // Invalid/missing credentials or quota exceeded should not affect component reliability
+    if (
+      error.status === RiseDataTwitter.FORBIDDEN_ERROR ||
+      error.status === RiseDataTwitter.TOO_MANY_REQUESTS_ERROR
+    ) {
+      return RiseDataTwitter.LOG_TYPE_WARNING;
+    }
+
+    // Invalid username should not affect component reliability
+    if (
+      error.status === RiseDataTwitter.NOT_FOUND_ERROR && error.responseText &&
+      error.responseText.startsWith("Username not found:")
+    ) {
+      return RiseDataTwitter.LOG_TYPE_WARNING;
+    }
+
+    return RiseDataTwitter.LOG_TYPE_ERROR;
+  }
+
 }
 
 customElements.define("rise-data-twitter", RiseDataTwitter);
