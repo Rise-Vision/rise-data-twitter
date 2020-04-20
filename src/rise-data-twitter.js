@@ -121,18 +121,17 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   }
 
   _getUrl() {
-    const companyId = RisePlayerConfiguration.getCompanyId();
-    const username = this.username && this.username.indexOf("@") === 0 ?
-      this.username.substring(1) : this.username;
+    const presentationId = RisePlayerConfiguration.getPresentationId(),
+      hash = this._computeHash( presentationId, this.id, this.username );
 
     return `${
       config.twitterServiceURL
-    }/get-tweets?companyId=${
-      companyId
-    }&username=${
-      username
-    }&count=${
-      this.maxitems
+    }/get-presentation-tweets?presentationId=${
+      presentationId
+    }&componentId=${
+      this.id
+    }&hash=${
+      hash
     }`;
   }
 
