@@ -12,6 +12,7 @@
     <script src="../../node_modules/chai/chai.js"></script>
     <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
     <script src="../../node_modules/sinon/pkg/sinon.js"></script>
+    <script src="../../node_modules/object-hash/dist/object_hash.js"></script>
 
     <script type="text/javascript">
       RisePlayerConfiguration = {
@@ -190,6 +191,19 @@
 
             assert.isFalse(element._getUrl.called);
             assert.isFalse(fetchMixin.fetch.called);
+          });
+        });
+
+        suite( "_computeHash", () => {
+          test( "should return a SHA1 hash value of provided params", () => {
+            const presentationId = "21c97752-0b8b-4a0c-852c-83c0471a3e00",
+              componentId = "rise-data-twitter-01",
+              username = "cnn",
+              expected = "7e5f08005453cdc84155be70574531e271e05644";
+
+            const hash = element._computeHash(presentationId, componentId, username);
+
+            assert.equal(hash, expected);
           });
         });
 
