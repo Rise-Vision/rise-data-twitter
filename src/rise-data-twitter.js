@@ -1,3 +1,4 @@
+/* global objectHash */
 /* eslint-disable no-console, no-unused-vars */
 
 import { html } from "@polymer/polymer";
@@ -113,6 +114,10 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
       this._start();
     }
+  }
+
+  _computeHash(presentationId, componentId, username) {
+    return objectHash( presentationId + componentId + username );
   }
 
   _getUrl() {
