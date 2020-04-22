@@ -133,6 +133,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
       this.id
     }&hash=${
       hash
+    }&useDraft=${
+      RisePlayerConfiguration.isPreview()
     }`;
   }
 
