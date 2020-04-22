@@ -226,7 +226,7 @@
             assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false`);
           });
 
-          test( "should not apply useDraft=false when running on Preview", () => {
+          test( "should apply useDraft=true when running on Preview", () => {
             RisePlayerConfiguration.isPreview = () => {
               return true;
             };
@@ -236,7 +236,7 @@
             const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
               url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=true`);
           });
         });
 
