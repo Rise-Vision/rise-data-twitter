@@ -214,11 +214,24 @@
             const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
               url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false`);
           });
 
           test( "should account for @ character in username and ensure to remove it for computing hash", () => {
             element.username = "@RiseVision";
+
+            const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
+              url = element._getUrl();
+
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false`);
+          });
+
+          test( "should not apply useDraft=false when running on Preview", () => {
+            RisePlayerConfiguration.isPreview = () => {
+              return true;
+            };
+
+            element.username = "RiseVision";
 
             const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
               url = element._getUrl();

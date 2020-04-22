@@ -125,7 +125,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
       username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username,
       hash = this._computeHash( presentationId, this.id, username );
 
-    return `${
+    let url = `${
       config.twitterServiceURL
     }/get-presentation-tweets?presentationId=${
       presentationId
@@ -134,6 +134,12 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }&hash=${
       hash
     }`;
+
+    if (!RisePlayerConfiguration.isPreview()) {
+      url = `${url}&useDraft=false`
+    }
+
+    return url;
   }
 
   _loadTweets() {
