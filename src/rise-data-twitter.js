@@ -135,6 +135,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
       hash
     }&useDraft=${
       RisePlayerConfiguration.isPreview()
+    }&count=${
+      this.maxitems
     }`;
   }
 

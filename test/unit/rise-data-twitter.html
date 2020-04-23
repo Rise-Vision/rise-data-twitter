@@ -214,7 +214,7 @@
             const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
               url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false&count=25`);
           });
 
           test( "should account for @ character in username and ensure to remove it for computing hash", () => {
@@ -223,7 +223,7 @@
             const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
               url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false&count=25`);
           });
 
           test( "should apply useDraft=true when running on Preview", () => {
@@ -236,7 +236,7 @@
             const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
               url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=true`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=true&count=25`);
           });
         });
 
