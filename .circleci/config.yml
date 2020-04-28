@@ -327,7 +327,8 @@ workflows:
           stage: beta
           name: deploy-beta
           requires:
-            - test-e2e-electron-beta
+            - gcloud-setup
+            - build
           filters:
             branches:
               only:
