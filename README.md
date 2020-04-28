@@ -10,8 +10,6 @@ The below illustrates simple usage of the component.
 
 #### Example
 
-_More information to be provided_
-
 ```
   <rise-data-twitter
       id="rise-data-twitter-01" label="Twitter instance">
@@ -48,7 +46,48 @@ The component listens for the following events:
 
 ### Provided data
 
-_To be defined_
+The response includes an array of objects where each object contains the following fields:
+
+- **name**: The title of the account, as indicated by its owner
+- **screenName**: The account name/handle
+- **profilePicture**: The url to the largest available version of the profile picture
+- **text**: The full text of the tweet
+- **createdAt**: The date when the tweet was created
+- **images**: A list of urls with the largest image size available 
+- **media**: A list of urls with media other than images (video and external links)
+- **statistics**:
+    - **retweetCount**: The number of retweets of the current tweet
+    - **likeCount**: The number of likes to the current tweet
+- **user**:
+    - **description**: The description of the account, as indicated by its owner
+    - **statuses**: The number of statuses/tweets of the account
+    - **followers**: The number of followers of the account
+- **quoted**: An object with the same structure as a tweet (name, screenName, etc, but not another quoted item). Only available if the main tweet is a quote to another tweet.
+
+#### Example
+
+```
+[
+    {
+        "name": "Mashable",
+        "screenName": "mashable",
+        "profilePicture": "https://pbs.twimg.com/xyz.png",
+        "createdAt": "Tue Apr 28 18:07:00 +0000 2020",
+        "text": "3D-printed airless",
+        "images": [],
+        "user": {
+            "description": "Some description.",
+            "statuses": 123,
+            "followers": 456
+        },
+        "statistics": {
+            "retweetCount": 2,
+            "likeCount": 8
+        },
+        "quoted": null
+    }
+]
+```
 
 ### Logging
 
