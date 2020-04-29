@@ -53,8 +53,7 @@ The response includes an array of objects where each object contains the followi
 - **profilePicture**: The url to the largest available version of the profile picture
 - **text**: The full text of the tweet
 - **createdAt**: The date when the tweet was created
-- **images**: A list of urls with the largest image size available 
-- **media**: A list of urls with media other than images (video and external links)
+- **images**: A list of urls with the largest image size available
 - **statistics**:
     - **retweetCount**: The number of retweets of the current tweet
     - **likeCount**: The number of likes to the current tweet
