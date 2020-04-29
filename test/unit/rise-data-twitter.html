@@ -166,6 +166,14 @@
             assert.isFalse( element._start.called );
           } );
 
+          test( "should send mock-data event", () => {
+            const event = new CustomEvent( "start" );
+            element.dispatchEvent( event );
+
+            assert.equal(riseElement._sendEvent.getCall(0).args[0], "mock-data");
+            assert.equal(riseElement._sendEvent.getCall(0).args[1].length, 2, "mock data array length is 2");
+          } );
+
         } );
 
         suite( "_loadTweets", () => {
