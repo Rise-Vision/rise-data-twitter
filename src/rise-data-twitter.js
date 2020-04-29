@@ -8,6 +8,7 @@ import { FetchMixin } from "rise-common-component/src/fetch-mixin.js";
 
 import { config } from "./rise-data-twitter-config.js";
 import { version } from "./rise-data-twitter-version.js";
+import mockData from "./mock-data.js";
 
 const fetchBase = CacheMixin(RiseElement);
 
@@ -58,6 +59,9 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   }
   static get TOO_MANY_REQUESTS_ERROR() {
     return 429;
+  }
+  static get MOCK_DATA() {
+    return "mock-data";
   }
 
   constructor() {
@@ -114,6 +118,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
       this._start();
     }
+
+    this._sendEvent(RiseDataTwitter.MOCK_DATA, mockData);
   }
 
   _computeHash(presentationId, componentId, username) {
