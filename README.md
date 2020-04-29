@@ -74,7 +74,9 @@ The response includes an array of objects where each object contains the followi
         "profilePicture": "https://pbs.twimg.com/xyz.png",
         "createdAt": "Tue Apr 28 18:07:00 +0000 2020",
         "text": "3D-printed airless",
-        "images": [],
+        "images": [
+            "https://pbs.twimg.com/media/EWxQkRBWoAETEAv?format=jpg&name=large"
+        ],
         "user": {
             "description": "Some description.",
             "statuses": 123,
@@ -84,7 +86,24 @@ The response includes an array of objects where each object contains the followi
             "retweetCount": 2,
             "likeCount": 8
         },
-        "quoted": null
+        "quoted": {
+            "createdAt": "Mon Apr 27 13:48:07 +0000 2020",
+            "images": [],
+            "name": "Donald J. Trump",
+            "profilePicture": "https://pbs.twimg.com/profile_images/874276197357596672/kUuht00m_normal.jpg",
+            "quoted": null,
+            "screenName": "realDonaldTrump",
+            "statistics": {
+                "likeCount": 384831,
+                "retweetCount": 79219
+            },
+            "text": "FAKE NEWS, THE ENEMY OF THE PEOPLE!",
+            "user": {
+                "description": "45th President of the United States of America🇺🇸",
+                "followers": 78921673,
+                "statuses": 51028
+            }
+        }
     }
 ]
 ```
