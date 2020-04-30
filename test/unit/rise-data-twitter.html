@@ -12,7 +12,7 @@
     <script src="../../node_modules/chai/chai.js"></script>
     <script src="../../node_modules/wct-mocha/wct-mocha.js"></script>
     <script src="../../node_modules/sinon/pkg/sinon.js"></script>
-    <script src="../../node_modules/object-hash/dist/object_hash.js"></script>
+    <script src="../../node_modules/jsencrypt/bin/jsencrypt.min.js"></script>
 
     <script type="text/javascript">
       RisePlayerConfiguration = {
@@ -203,20 +203,33 @@
         });
 
         suite( "_getUrl", () => {
+          test( "should encrypt value", () => {
+            const value = element._encryptParam("abc");
+            const arbitraryMinExpectedLength = 100;
+            assert.isTrue(value.length > arbitraryMinExpectedLength);
+
+            // "/" and "+" characters always exist in the encrypted value. 
+            // Make sure they are encoded for use in URL
+            assert.isTrue(value.indexOf("%2F") > 0, "forward slash is encoded");
+            assert.isTrue(value.indexOf("%2B") > 0, "plus sign is encoded");
+          });
+
           test( "should build URL", () => {
             element.username = "RiseVision";
+            sandbox.stub(element, "_encryptParam").returns("ABC123");
 
             const url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&username=${element.username}&count=25`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets-secure?presentationId=xxxx-yyyy&componentId=${element.id}&username=ABC123&count=25`);
           });
 
           test( "should account for @ character in username and ensure to remove it", () => {
             element.username = "@RiseVision";
+            const stub = sandbox.stub(element, "_encryptParam");
 
             const url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&username=RiseVision&count=25`);
+            assert.isTrue(stub.calledWith('RiseVision'));
           });
 
           test("should return empty url string when presentation id is falsy", () => {
