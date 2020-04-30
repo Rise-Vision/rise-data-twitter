@@ -1,5 +1,5 @@
 export default
-[
+{"tweets": [
   {
       "createdAt": "Mon Apr 27 13:37:00 +0000 2020",
       "images": [],
@@ -39,4 +39,4 @@ export default
           "statuses": 5893
       }
   }
-]
+]}
