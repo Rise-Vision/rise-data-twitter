@@ -258,7 +258,6 @@ workflows:
             branches:
               only:
                 - /^e2e[/].*/
-                - master
       - build-e2e-page:
           stage: stable
           name: build-e2e-page-stable
@@ -277,7 +276,6 @@ workflows:
               only:
                 - /^(stage|staging)[/].*/
                 - /^e2e[/].*/
-                - master
                 - build/stable
       - deploy-e2e-page:
           stage: beta
@@ -288,7 +286,6 @@ workflows:
           filters:
             branches:
               only:
-                - master
                 - /^e2e[/].*/
       - deploy-e2e-page:
           stage: stable
@@ -310,7 +307,6 @@ workflows:
           filters:
             branches:
               only:
-                - master
                 - /^e2e[/].*/
       - test-e2e-electron:
           displayId: RCSUD8KXTPGF
