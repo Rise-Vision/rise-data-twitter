@@ -202,49 +202,21 @@
           });
         });
 
-        suite( "_computeHash", () => {
-          test( "should return a SHA1 hash value of provided params", () => {
-            const presentationId = "21c97752-0b8b-4a0c-852c-83c0471a3e00",
-              componentId = "rise-data-twitter-01",
-              username = "cnn",
-              expected = "7e5f08005453cdc84155be70574531e271e05644";
-
-            const hash = element._computeHash(presentationId, componentId, username);
-
-            assert.equal(hash, expected);
-          });
-        });
-
         suite( "_getUrl", () => {
           test( "should build URL", () => {
             element.username = "RiseVision";
 
-            const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
-              url = element._getUrl();
+            const url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false&count=25`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&username=${element.username}&count=25`);
           });
 
-          test( "should account for @ character in username and ensure to remove it for computing hash", () => {
+          test( "should account for @ character in username and ensure to remove it", () => {
             element.username = "@RiseVision";
 
-            const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
-              url = element._getUrl();
+            const url = element._getUrl();
 
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=false&count=25`);
-          });
-
-          test( "should apply useDraft=true when running on Preview", () => {
-            RisePlayerConfiguration.isPreview = () => {
-              return true;
-            };
-
-            element.username = "RiseVision";
-
-            const hashVal = "f073a40c095e19635a4cb6ceeb8a554d0f88f55f",
-              url = element._getUrl();
-
-            assert.equal(url, `https://services-stage.risevision.com/twitter/get-presentation-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&hash=${hashVal}&useDraft=true&count=25`);
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&username=RiseVision&count=25`);
           });
         });
 
