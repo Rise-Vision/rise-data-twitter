@@ -1,4 +1,3 @@
-/* global objectHash */
 /* eslint-disable no-console, no-unused-vars */
 
 import { html } from "@polymer/polymer";
@@ -122,25 +121,19 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     this._sendEvent(RiseDataTwitter.MOCK_DATA, mockData);
   }
 
-  _computeHash(presentationId, componentId, username) {
-    return objectHash( presentationId + componentId + username );
-  }
-
   _getUrl() {
     const presentationId = RisePlayerConfiguration.getPresentationId(),
-      username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username,
-      hash = this._computeHash( presentationId, this.id, username );
+      // TODO: encrypt username
+      username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username;
 
     return `${
       config.twitterServiceURL
-    }/get-presentation-tweets?presentationId=${
+    }/get-tweets?presentationId=${
       presentationId
     }&componentId=${
       this.id
-    }&hash=${
-      hash
-    }&useDraft=${
-      RisePlayerConfiguration.isPreview()
+    }&username=${
+      username
     }&count=${
       this.maxitems
     }`;
