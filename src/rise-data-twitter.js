@@ -1,3 +1,4 @@
+/* global JSEncrypt */
 /* eslint-disable no-console, no-unused-vars */
 
 import { html } from "@polymer/polymer";
@@ -61,6 +62,14 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   }
   static get MOCK_DATA() {
     return "mock-data";
+  }
+  static get PUBLIC_KEY() {
+    return "-----BEGIN PUBLIC KEY-----" +
+    "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9eHOyNvEs7d0wuw7cHG1Hn+O4" +
+    "YP2zpgpsKmRqTM93q/SGrGNi1AJEl1U8Hab9FWjdCtwZpIjwfqe77+IfQu5ioSzo" +
+    "/+i1JmBBRZ/jNa1z08cWFYWv0DAWCzL5L8bIZjMbxPh1Bb1ycaA4SN8dFAiBkIrC" +
+    "BMrE1bGUIm2MDs1kwwIDAQAB" +
+    "-----END PUBLIC KEY-----";
   }
 
   constructor() {
@@ -132,15 +141,22 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
     return `${
       config.twitterServiceURL
-    }/get-tweets?presentationId=${
+    }/get-tweets-secure?presentationId=${
       presentationId
     }&componentId=${
       this.id
     }&username=${
-      username
+      this._encryptParam(username)
     }&count=${
       this.maxitems
     }`;
+  }
+
+  _encryptParam(value) {
+    let encrypt = new JSEncrypt();
+
+    encrypt.setPublicKey(RiseDataTwitter.PUBLIC_KEY);
+    return encodeURIComponent(encrypt.encrypt(value));
   }
 
   _loadTweets() {
