@@ -126,6 +126,10 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
       // TODO: encrypt username
       username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username;
 
+    if (!presentationId || !username) {
+      return "";
+    }
+
     return `${
       config.twitterServiceURL
     }/get-tweets?presentationId=${
