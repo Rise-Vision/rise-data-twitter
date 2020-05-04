@@ -51,7 +51,8 @@
 <div class="twitterItemsContainer" id="main">
 </div>
 
-<rise-data-twitter id="rise-data-twitter-01">
+<!-- Ensure to add presentationId=demo query param to url in browser so Twitter service will provide fixed mock data regardless of attribute values -->
+<rise-data-twitter id="rise-data-twitter-01" username="test">
 </rise-data-twitter>
 
 <script>
@@ -67,6 +68,10 @@
 
     riseDataTwitter01.addEventListener( "data-error", evt => {
       console.log( "data-error", evt.detail );
+    } );
+
+    riseDataTwitter01.addEventListener( "request-error", evt => {
+      console.log( "request-error", evt.detail );
     } );
 
     // Uncomment if testing directly in browser
