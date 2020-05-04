@@ -218,6 +218,18 @@
 
             assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets?presentationId=xxxx-yyyy&componentId=${element.id}&username=RiseVision&count=25`);
           });
+
+          test("should return empty url string when presentation id is falsy", () => {
+            const clone = Object.assign({}, RisePlayerConfiguration.getPresentationId);
+
+            element.username = "@RiseVision";
+
+            RisePlayerConfiguration.getPresentationId = () => {return null};
+
+            assert.equal(element._getUrl(), "");
+
+            RisePlayerConfiguration.getPresentationId = Object.assign({}, clone);
+          });
         });
 
         suite( "_handleResponse", () => {
