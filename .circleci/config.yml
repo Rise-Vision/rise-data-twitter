@@ -258,6 +258,7 @@ workflows:
             branches:
               only:
                 - /^e2e[/].*/
+                - master
       - build-e2e-page:
           stage: stable
           name: build-e2e-page-stable
@@ -277,6 +278,7 @@ workflows:
                 - /^(stage|staging)[/].*/
                 - /^e2e[/].*/
                 - build/stable
+                - master
       - deploy-e2e-page:
           stage: beta
           name: deploy-e2e-page-beta
@@ -287,6 +289,7 @@ workflows:
             branches:
               only:
                 - /^e2e[/].*/
+                - master
       - deploy-e2e-page:
           stage: stable
           name: deploy-e2e-page-stable
@@ -308,6 +311,7 @@ workflows:
             branches:
               only:
                 - /^e2e[/].*/
+                - master
       - test-e2e-electron:
           displayId: RCSUD8KXTPGF
           installerPath: /
@@ -323,8 +327,7 @@ workflows:
           stage: beta
           name: deploy-beta
           requires:
-            - gcloud-setup
-            - build
+            - test-e2e-electron-beta
           filters:
             branches:
               only:
