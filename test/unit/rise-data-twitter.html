@@ -95,85 +95,49 @@
             assert.isTrue(element._init.calledOnce);
             assert.isFalse(stub.calledOnce);
           });
-
-          test("should setup handlers for viewer events", () => {
-            sandbox.stub(element, "_reset");
-            sandbox.stub(element, "_stop");
-
-            element.dispatchEvent( new CustomEvent( "rise-presentation-play" ));
-            element.dispatchEvent( new CustomEvent( "rise-presentation-stop" ));
-
-            assert.isTrue(element._reset.calledOnce);
-            assert.isTrue(element._stop.calledOnce);
-          });
-
         });
 
         suite( "_reset", () => {
           setup( () => {
-            sandbox.stub( element, "_stop" );
-            sandbox.stub( element, "_start" );
+            sandbox.stub( element, "_loadTweets" );
           } );
 
           test( "should not execute reset when an initial start still pending", () => {
             element._reset();
 
-            assert.isFalse( element._stop.calledOnce );
-            assert.isFalse( element._start.calledOnce );
+            assert.isFalse( element._loadTweets.calledOnce );
           } );
 
           test( "should execute reset when not the initial start", () => {
             element._initialStart = false;
             element._reset();
 
-            assert.isTrue( element._stop.calledOnce );
-            assert.isTrue( element._start.calledOnce );
-          } );
-        } );
-
-        suite( "_start", () => {
-          test( "coming soon ...", () => {
-
-          } );
-        } );
-
-        suite( "_stop", () => {
-          test( "coming soon ...", () => {
-
+            assert.isTrue( element._loadTweets.calledOnce );
           } );
         } );
 
         suite( "_handleStart", () => {
 
           setup( () => {
-            sandbox.stub( element, "_start" );
+            sandbox.stub( element, "_loadTweets" );
           } );
 
-          test( "should call _start() when this is the initial 'start'", () => {
+          test( "should call _loadTweets() when this is the initial 'start'", () => {
             const event = new CustomEvent( "start" );
             element.dispatchEvent( event );
 
-            assert.isTrue( element._start.calledOnce );
+            assert.isTrue( element._loadTweets.calledOnce );
             assert.isFalse( element._initialStart, "_initialStart set to false" );
           } );
 
-          test( "should not call _start() when this is not the initial start", () => {
+          test( "should not call _loadTweets() when this is not the initial start", () => {
             element._initialStart = false;
 
             const event = new CustomEvent( "start" );
             element.dispatchEvent( event );
 
-            assert.isFalse( element._start.called );
+            assert.isFalse( element._loadTweets.called );
           } );
-
-          test( "should send mock-data event", () => {
-            const event = new CustomEvent( "start" );
-            element.dispatchEvent( event );
-
-            assert.equal(riseElement._sendEvent.getCall(0).args[0], "mock-data");
-            assert.equal(riseElement._sendEvent.getCall(0).args[1].tweets.length, 2, "mock data array length is 2");
-          } );
-
         } );
 
         suite( "_loadTweets", () => {
@@ -208,7 +172,7 @@
             const arbitraryMinExpectedLength = 100;
             assert.isTrue(value.length > arbitraryMinExpectedLength);
 
-            // "/" and "+" characters always exist in the encrypted value. 
+            // "/" and "+" characters always exist in the encrypted value.
             // Make sure they are encoded for use in URL
             assert.isTrue(value.indexOf("%2F") > 0, "forward slash is encoded");
             assert.isTrue(value.indexOf("%2B") > 0, "plus sign is encoded");

@@ -8,7 +8,6 @@ import { FetchMixin } from "rise-common-component/src/fetch-mixin.js";
 
 import { config } from "./rise-data-twitter-config.js";
 import { version } from "./rise-data-twitter-version.js";
-import mockData from "./mock-data.js";
 
 const fetchBase = CacheMixin(RiseElement);
 
@@ -60,9 +59,6 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   static get TOO_MANY_REQUESTS_ERROR() {
     return 429;
   }
-  static get MOCK_DATA() {
-    return "mock-data";
-  }
   static get PUBLIC_KEY() {
     return "-----BEGIN PUBLIC KEY-----" +
     "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC9eHOyNvEs7d0wuw7cHG1Hn+O4" +
@@ -81,9 +77,6 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
   ready() {
     super.ready();
-
-    this.addEventListener( "rise-presentation-play", () => this._reset());
-    this.addEventListener( "rise-presentation-stop", () => this._stop());
 
     super.initFetch({
       refresh: 1000 * 60 * 30,
@@ -105,17 +98,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
   _reset() {
     if ( !this._initialStart ) {
-      this._stop();
-      this._start();
+      this._loadTweets();
     }
-  }
-
-  _start() {
-    this._loadTweets();
-  }
-
-  _stop() {
-    // TODO: coming soon
   }
 
   _handleStart() {
@@ -124,10 +108,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     if (this._initialStart) {
       this._initialStart = false;
 
-      this._start();
+      this._loadTweets()
     }
-
-    this._sendEvent(RiseDataTwitter.MOCK_DATA, mockData);
   }
 
   _getUrl() {
