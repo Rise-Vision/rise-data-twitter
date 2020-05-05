@@ -165,15 +165,6 @@
 
             assert.isFalse( element._start.called );
           } );
-
-          test( "should send mock-data event", () => {
-            const event = new CustomEvent( "start" );
-            element.dispatchEvent( event );
-
-            assert.equal(riseElement._sendEvent.getCall(0).args[0], "mock-data");
-            assert.equal(riseElement._sendEvent.getCall(0).args[1].tweets.length, 2, "mock data array length is 2");
-          } );
-
         } );
 
         suite( "_loadTweets", () => {
@@ -208,7 +199,7 @@
             const arbitraryMinExpectedLength = 100;
             assert.isTrue(value.length > arbitraryMinExpectedLength);
 
-            // "/" and "+" characters always exist in the encrypted value. 
+            // "/" and "+" characters always exist in the encrypted value.
             // Make sure they are encoded for use in URL
             assert.isTrue(value.indexOf("%2F") > 0, "forward slash is encoded");
             assert.isTrue(value.indexOf("%2B") > 0, "plus sign is encoded");
