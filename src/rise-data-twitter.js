@@ -78,9 +78,6 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   ready() {
     super.ready();
 
-    this.addEventListener( "rise-presentation-play", () => this._reset());
-    this.addEventListener( "rise-presentation-stop", () => this._stop());
-
     super.initFetch({
       refresh: 1000 * 60 * 30,
       refreshFromCacheControlHeader: true, // Cache-Control expiration overrides refresh setting above
@@ -101,17 +98,8 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
   _reset() {
     if ( !this._initialStart ) {
-      this._stop();
-      this._start();
+      this._loadTweets();
     }
-  }
-
-  _start() {
-    this._loadTweets();
-  }
-
-  _stop() {
-    // TODO: coming soon
   }
 
   _handleStart() {
@@ -120,7 +108,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     if (this._initialStart) {
       this._initialStart = false;
 
-      this._start();
+      this._loadTweets()
     }
   }
 
