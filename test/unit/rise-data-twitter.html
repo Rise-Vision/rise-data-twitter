@@ -251,7 +251,7 @@
         suite( "_getTwitterServiceUrl", () => {
           test( "should return stage service url when running in apps stage", () => {
             sandbox.stub(RisePlayerConfiguration, "isPreview").returns(true);
-            sandbox.stub(top.location, "host").returns("apps-stage-8.risevision.com");
+            sandbox.stub(window.location, "pathname").returns("/staging/templates/abc123/src/template.html");
 
             assert.equal(element._getTwitterServiceUrl(), "https://services-stage.risevision.com/twitter");
           } );

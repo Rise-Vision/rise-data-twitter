@@ -115,9 +115,13 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
   _getTwitterServiceUrl() {
     if (RisePlayerConfiguration.isPreview()) {
       try {
-        const host = top.location.host;
+        const pathname = window.location.pathname;
+        const parts = pathname.split("/");
 
-        if (host.includes("apps-stage-")) {
+        // example window location:  https://widgets.risevision.com/staging/templates/abc123/src/template.html?type=preview&presentationId=abc123
+        // pathname for above would be:  /staging/templates/abc123/src/template.html
+
+        if (parts[0] === "staging") {
           return "https://services-stage.risevision.com/twitter"
         }
       } catch ( err ) {
