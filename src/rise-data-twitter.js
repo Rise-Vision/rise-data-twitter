@@ -121,8 +121,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
         // example window location:  https://widgets.risevision.com/staging/templates/abc123/src/template.html?type=preview&presentationId=abc123
         // pathname for above would be:  /staging/templates/abc123/src/template.html
 
-        console.log("_getTwitterServiceUrl", pathname, parts, parts[0]);
-        if (parts[0] === "staging") {
+        if (parts[1] === "staging") {
           return "https://services-stage.risevision.com/twitter"
         }
       } catch ( err ) {
