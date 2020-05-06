@@ -112,9 +112,25 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }
   }
 
+  _getTwitterServiceUrl() {
+    if (RisePlayerConfiguration.isPreview()) {
+      try {
+        const host = top.location.host;
+
+        if (host.includes("apps-stage-")) {
+          return "https://services-stage.risevision.com/twitter"
+        }
+      } catch ( err ) {
+        console.log( "can't retrieve top location host", err );
+        // fallback on configured service url
+      }
+    }
+
+    return config.twitterServiceURL;
+  }
+
   _getUrl() {
     const presentationId = RisePlayerConfiguration.getPresentationId(),
-      // TODO: encrypt username
       username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username;
 
     if (!presentationId || !username) {
@@ -122,7 +138,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }
 
     return `${
-      config.twitterServiceURL
+      this._getTwitterServiceUrl()
     }/get-tweets-secure?presentationId=${
       presentationId
     }&componentId=${
