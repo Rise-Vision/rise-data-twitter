@@ -121,11 +121,12 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
         // example window location:  https://widgets.risevision.com/staging/templates/abc123/src/template.html?type=preview&presentationId=abc123
         // pathname for above would be:  /staging/templates/abc123/src/template.html
 
+        console.log("_getTwitterServiceUrl", pathname, parts, parts[0]);
         if (parts[0] === "staging") {
           return "https://services-stage.risevision.com/twitter"
         }
       } catch ( err ) {
-        console.log( "can't retrieve top location host", err );
+        console.log( "can't retrieve window location pathname", err );
         // fallback on configured service url
       }
     }
