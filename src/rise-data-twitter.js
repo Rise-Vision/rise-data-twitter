@@ -6,7 +6,6 @@ import { RiseElement } from "rise-common-component/src/rise-element.js";
 import { CacheMixin } from "rise-common-component/src/cache-mixin.js";
 import { FetchMixin } from "rise-common-component/src/fetch-mixin.js";
 
-import { config } from "./rise-data-twitter-config.js";
 import { version } from "./rise-data-twitter-version.js";
 
 const fetchBase = CacheMixin(RiseElement);
@@ -67,6 +66,12 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     "BMrE1bGUIm2MDs1kwwIDAQAB" +
     "-----END PUBLIC KEY-----";
   }
+  static get SERVICE_URL_STAGING() {
+    return "https://services-stage.risevision.com/twitter";
+  }
+  static get SERVICE_URL_PROD() {
+    return "https://services.risevision.com/twitter";
+  }
 
   constructor() {
     super();
@@ -114,15 +119,15 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
 
   _getUrl() {
     const presentationId = RisePlayerConfiguration.getPresentationId(),
-      // TODO: encrypt username
-      username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username;
+      username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username,
+      serviceUrl = RisePlayerConfiguration.Helpers.isStaging() ? RiseDataTwitter.SERVICE_URL_STAGING : RiseDataTwitter.SERVICE_URL_PROD;
 
     if (!presentationId || !username) {
       return "";
     }
 
     return `${
-      config.twitterServiceURL
+      serviceUrl
     }/get-tweets-secure?presentationId=${
       presentationId
     }&componentId=${

@@ -46,6 +46,12 @@
             return false;
           };
 
+          RisePlayerConfiguration.Helpers = {
+            isStaging: () => {
+              return true;
+            }
+          }
+
           clock = sinon.useFakeTimers();
 
           element = fixture("test-block");
@@ -197,7 +203,7 @@
           });
 
           test("should return empty url string when presentation id is falsy", () => {
-            const clone = Object.assign({}, RisePlayerConfiguration.getPresentationId);
+            const clone = RisePlayerConfiguration.getPresentationId;
 
             element.username = "@RiseVision";
 
@@ -205,7 +211,22 @@
 
             assert.equal(element._getUrl(), "");
 
-            RisePlayerConfiguration.getPresentationId = Object.assign({}, clone);
+            RisePlayerConfiguration.getPresentationId = clone;
+          });
+
+          test("should inject production service url when is not staging", () => {
+            const clone = RisePlayerConfiguration.Helpers.isStaging;
+
+            element.username = "@RiseVision";
+
+            RisePlayerConfiguration.Helpers.isStaging = () => {return false};
+            sandbox.stub(element, "_encryptParam").returns("ABC123");
+
+            const url = element._getUrl();
+
+            assert.equal(url, `https://services.risevision.com/twitter/get-tweets-secure?presentationId=xxxx-yyyy&componentId=${element.id}&username=ABC123&count=25`);
+
+            RisePlayerConfiguration.Helpers.isStaging = clone;
           });
         });
 

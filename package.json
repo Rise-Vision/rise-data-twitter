@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "Rise Data Twitter component",
   "scripts": {
-    "prebuild": "eslint . && ./node_modules/rise-common-component/scripts/create_config.sh prod rise-data-twitter",
+    "prebuild": "eslint .",
     "build": "polymer build && ./node_modules/rise-common-component/scripts/extract-source.sh rise-data-twitter",
     "postbuild": "gulp",
     "pretty": "eslint . --fix",
-    "pretest": "eslint . && ./node_modules/rise-common-component/scripts/create_config.sh test rise-data-twitter",
+    "pretest": "eslint .",
     "test": "polymer test"
   },
   "repository": {
