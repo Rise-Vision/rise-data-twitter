@@ -17,8 +17,13 @@
     <script type="text/javascript">
       RisePlayerConfiguration = {
         isConfigured: () => true,
-        getPresentationId: () => "xxxx-yyyy"
+        getPresentationId: () => "xxxx-yyyy",
+        isPreview: () => true
       };
+
+      RisePlayerConfiguration.Helpers = {
+        isStaging: () => true
+      }
     </script>
 
     <script type="module" src="../../src/rise-data-twitter.js"></script>
@@ -41,16 +46,6 @@
             warning: () => {},
             error: sinon.spy()
           };
-
-          RisePlayerConfiguration.isPreview = () => {
-            return false;
-          };
-
-          RisePlayerConfiguration.Helpers = {
-            isStaging: () => {
-              return true;
-            }
-          }
 
           clock = sinon.useFakeTimers();
 
@@ -184,7 +179,7 @@
             assert.isTrue(value.indexOf("%2B") > 0, "plus sign is encoded");
           });
 
-          test( "should build URL", () => {
+          test( "should build staging URL when running in preview in Apps staging", () => {
             element.username = "RiseVision";
             sandbox.stub(element, "_encryptParam").returns("ABC123");
 
@@ -193,11 +188,25 @@
             assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets-secure?presentationId=xxxx-yyyy&componentId=${element.id}&username=ABC123&count=25`);
           });
 
+          test( "should build production URL when running in preview in Apps production", () => {
+            const clone = RisePlayerConfiguration.Helpers.isStaging;
+
+            element.username = "RiseVision";
+            sandbox.stub(element, "_encryptParam").returns("ABC123");
+            RisePlayerConfiguration.Helpers.isStaging = () => false;
+
+            const url = element._getUrl();
+
+            assert.equal(url, `https://services.risevision.com/twitter/get-tweets-secure?presentationId=xxxx-yyyy&componentId=${element.id}&username=ABC123&count=25`);
+
+            RisePlayerConfiguration.Helpers.isStaging = clone;
+          });
+
           test( "should account for @ character in username and ensure to remove it", () => {
             element.username = "@RiseVision";
             const stub = sandbox.stub(element, "_encryptParam");
 
-            const url = element._getUrl();
+            element._getUrl();
 
             assert.isTrue(stub.calledWith('RiseVision'));
           });
@@ -214,19 +223,36 @@
             RisePlayerConfiguration.getPresentationId = clone;
           });
 
-          test("should inject production service url when is not staging", () => {
-            const clone = RisePlayerConfiguration.Helpers.isStaging;
+          test("should build staging url when running on Display and with a test/staging company", () => {
+            const cloneIsPreview = RisePlayerConfiguration.isPreview;
 
             element.username = "@RiseVision";
+            element.isStaging = true;
 
-            RisePlayerConfiguration.Helpers.isStaging = () => {return false};
+            RisePlayerConfiguration.isPreview = () => {return false};
+            sandbox.stub(element, "_encryptParam").returns("ABC123");
+
+            const url = element._getUrl();
+
+            assert.equal(url, `https://services-stage.risevision.com/twitter/get-tweets-secure?presentationId=xxxx-yyyy&componentId=${element.id}&username=ABC123&count=25`);
+
+            RisePlayerConfiguration.isPreview = cloneIsPreview;
+          });
+
+          test("should build production url when running on Display and with a production company", () => {
+            const cloneIsPreview = RisePlayerConfiguration.isPreview;
+
+            element.username = "@RiseVision";
+            element.isStaging = false;
+
+            RisePlayerConfiguration.isPreview = () => {return false};
             sandbox.stub(element, "_encryptParam").returns("ABC123");
 
             const url = element._getUrl();
 
             assert.equal(url, `https://services.risevision.com/twitter/get-tweets-secure?presentationId=xxxx-yyyy&componentId=${element.id}&username=ABC123&count=25`);
 
-            RisePlayerConfiguration.Helpers.isStaging = clone;
+            RisePlayerConfiguration.isPreview = cloneIsPreview;
           });
         });
 
