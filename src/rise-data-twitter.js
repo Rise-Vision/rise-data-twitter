@@ -102,7 +102,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }, this._handleResponse, this._handleError);
 
     super.initCache({
-      name: this.tagName.toLowerCase(),
+      name: `${this.tagName.toLowerCase()}_v${version.charAt(0)}`,
       expiry: -1
     });
   }
@@ -134,9 +134,13 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }
   }
 
+  _getUsername() {
+    return this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username
+  }
+
   _getUrl() {
     const presentationId = RisePlayerConfiguration.getPresentationId(),
-      username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username,
+      username = this._getUsername(),
       serviceUrl = this._getServiceUrl();
 
     if (!presentationId || !username) {
@@ -204,6 +208,10 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }
   }
 
+  _getCacheKey() {
+    return `${this._getUsername()}_${this.maxitems}`;
+  }
+
   logTypeForFetchError(error) {
     if (!error || !error.status) {
       return RiseDataTwitter.LOG_TYPE_ERROR;
@@ -226,6 +234,14 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }
 
     return RiseDataTwitter.LOG_TYPE_ERROR;
+  }
+
+  getCacheRequestKey() {
+    return this._getCacheKey();
+  }
+
+  putCacheRequestKey() {
+    return this._getCacheKey();
   }
 
 }
