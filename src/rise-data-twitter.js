@@ -34,6 +34,12 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
        */
       credentialsUpdated: {
         type: Number
+      },
+      /**
+       * A flag set to to identify if component configured from Apps Staging
+       */
+      isStaging: {
+        type: Boolean
       }
     };
   }
@@ -117,10 +123,21 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     }
   }
 
+  _getServiceUrl() {
+    if (RisePlayerConfiguration.isPreview()) {
+      // On preview, if running in Apps staging, it is guaranteed the 'staging' version of templates are loaded, so we use the Helper function.
+      // We use Helper function instead of isStaging attribute to account for initial selection of Template and no attribute data available yet.
+      return RisePlayerConfiguration.Helpers.isStaging() ? RiseDataTwitter.SERVICE_URL_STAGING : RiseDataTwitter.SERVICE_URL_PROD;
+    } else {
+      // On a display player is guaranteed to load the 'stable' version of templates, so we need to check isStaging flag attribute.
+      return this.isStaging ? RiseDataTwitter.SERVICE_URL_STAGING : RiseDataTwitter.SERVICE_URL_PROD;
+    }
+  }
+
   _getUrl() {
     const presentationId = RisePlayerConfiguration.getPresentationId(),
       username = this.username && this.username.indexOf("@") === 0 ? this.username.substring(1) : this.username,
-      serviceUrl = RisePlayerConfiguration.Helpers.isStaging() ? RiseDataTwitter.SERVICE_URL_STAGING : RiseDataTwitter.SERVICE_URL_PROD;
+      serviceUrl = this._getServiceUrl();
 
     if (!presentationId || !username) {
       return "";
