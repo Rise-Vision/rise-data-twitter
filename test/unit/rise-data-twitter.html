@@ -167,6 +167,20 @@
           });
         });
 
+        suite( "_getUsername", () => {
+          test( "should return username", () => {
+            element.username = "test";
+
+            assert.equal(element._getUsername(), "test");
+          });
+
+          test( "should account for @ character in username and ensure to remove it", () => {
+            element.username = "@RiseVision";
+
+            assert.equal(element._getUsername(), "RiseVision");
+          });
+        } );
+
         suite( "_getUrl", () => {
           test( "should encrypt value", () => {
             const value = element._encryptParam("abc");
@@ -200,15 +214,6 @@
             assert.equal(url, `https://services.risevision.com/twitter/get-tweets-secure?presentationId=xxxx-yyyy&componentId=${element.id}&username=ABC123&count=25`);
 
             RisePlayerConfiguration.Helpers.isStaging = clone;
-          });
-
-          test( "should account for @ character in username and ensure to remove it", () => {
-            element.username = "@RiseVision";
-            const stub = sandbox.stub(element, "_encryptParam");
-
-            element._getUrl();
-
-            assert.isTrue(stub.calledWith('RiseVision'));
           });
 
           test("should return empty url string when presentation id is falsy", () => {
@@ -255,6 +260,14 @@
             RisePlayerConfiguration.isPreview = cloneIsPreview;
           });
         });
+
+        suite( "_getCacheKey", () => {
+          test( "should return cache key using username and maxitems", () => {
+            element.username = "test";
+
+            assert.equal(element._getCacheKey(), "test_25");
+          });
+        } );
 
         suite( "_handleResponse", () => {
           test( "should handle a valid JSON response", () => {
