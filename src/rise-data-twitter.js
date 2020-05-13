@@ -240,7 +240,7 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     return this._getCacheKey();
   }
 
-  putCacheRequestKey() {
+  getCacheResponseKey() {
     return this._getCacheKey();
   }
 
