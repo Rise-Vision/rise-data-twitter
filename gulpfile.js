@@ -1,13 +1,13 @@
-const concat = require("gulp-concat");
-const gulp = require("gulp");
 
-const bundle = "dist/rise-data-twitter.js";
-const dependencies = [
-  "node_modules/jsencrypt/bin/jsencrypt.min.js"
-];
+const gulp = require("gulp");
+const fs = require("fs");
+const header = require("gulp-header");
+
+const bundles = "dist/rise-data-twitter*.js";
+const dependency = "node_modules/jsencrypt/bin/jsencrypt.min.js";
 
 gulp.task( "default", () => {
-  return gulp.src( dependencies.concat(bundle) )
-    .pipe( concat( bundle ) )
-    .pipe( gulp.dest( "." ) );
+  return gulp.src( bundles )
+    .pipe( header( fs.readFileSync(dependency) ) )
+    .pipe( gulp.dest( "dist/" ) );
 });
