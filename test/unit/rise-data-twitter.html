@@ -56,6 +56,7 @@
 
           sandbox.spy(riseElement, '_sendEvent');
           sandbox.stub(riseElement, '_setUptimeError');
+          sandbox.stub(riseElement, 'log');
         });
 
         teardown(()=>{
@@ -311,71 +312,54 @@
           });
         });
 
-        suite( "logTypeForFetchError", () => {
-          test( "should return error type for null error", () => {
-            const eventType = element.logTypeForFetchError();
-
-            assert.equal(eventType, "error");
+        suite( "_errorCodeForFetchError", () => {
+          test( "should return E000000037 with no status", () => {
+            assert.equal(element._errorCodeForFetchError(), "E000000037");
+            assert.equal(element._errorCodeForFetchError({}), "E000000037");
+            assert.equal(element._errorCodeForFetchError({status: 0}), "E000000037");
           });
 
-          test( "should return error type for error with no status", () => {
-            const eventType = element.logTypeForFetchError({});
-
-            assert.equal(eventType, "error");
+          test( "should return E000000095 for a 400 Bad Request", () => {
+            assert.equal(element._errorCodeForFetchError({status: 400}), "E000000095");
           });
 
-          test( "should return warning type for 403 status", () => {
-            const eventType = element.logTypeForFetchError({ status: 403 });
-
-            assert.equal(eventType, "warning");
+          test( "should return E000000096 for a 403 Forbidden error", () => {
+            assert.equal(element._errorCodeForFetchError({status: 403}), "E000000096");
           });
 
-          test( "should return warning type for 429 status", () => {
-            const eventType = element.logTypeForFetchError({ status: 429 });
-
-            assert.equal(eventType, "warning");
+          test( "should return E000000099 for a 404 Not Found error pertaining to user name", () => {
+            assert.equal(element._errorCodeForFetchError({status: 404, responseText: "Username not found: test"}), "E000000099");
           });
 
-          test( "should return error type for 404 status with no response text", () => {
-            const eventType = element.logTypeForFetchError({ status: 404 });
-
-            assert.equal(eventType, "error");
+          test( "should return E000000097 for a 409 Too Many Requests error", () => {
+            assert.equal(element._errorCodeForFetchError({status: 429}), "E000000097");
           });
 
-          test( "should return warning type for 404 status with username not found", () => {
-            const eventType = element.logTypeForFetchError({
-              status: 404,
-              responseText: "Username not found: 'panchito'"
-            });
-
-            assert.equal(eventType, "warning");
+          test( "should return E000000098 for an unexpected Twitter Service error", () => {
+            // server error
+            assert.equal(element._errorCodeForFetchError({status: 500}), "E000000098");
+            // when presentation data not found from Core with the presentation id used in request
+            assert.equal(element._errorCodeForFetchError({status: 404}), "E000000098");
+            // a concurrent request for user timeline is loading and is severely delayed in completing
+            assert.equal(element._errorCodeForFetchError({status: 409}), "E000000098");
+            // unaccount for status
+            assert.equal(element._errorCodeForFetchError({status: 503}), "E000000098");
           });
 
-          test( "should return error type for 404 status with page not found", () => {
-            const eventType = element.logTypeForFetchError({
-              status: 404,
-              responseText: "Page not found"
-            });
+        } );
 
-            assert.equal(eventType, "error");
+        suite( "logFetchError", () => {
+          test( "should log warning when offline", () => {
+            element.logFetchError({isOffline: true, status: 0});
+            assert.isTrue(riseElement.log.calledWith("warning", "client offline", null, {error: null}));
           });
 
-          test( "should return error type for 500 status", () => {
-            const eventType = element.logTypeForFetchError({ status: 500 });
+          test( "should log error when online", () => {
+            element.logFetchError();
+            assert.isTrue(riseElement.log.calledWith("error", "request error", {errorCode: "E000000037"}, {error: null}));
 
-            assert.equal(eventType, "error");
-          });
-
-          test( "should return error type for 400 status", () => {
-            const eventType = element.logTypeForFetchError({ status: 400 });
-
-            assert.equal(eventType, "error");
-          });
-
-          test( "should return error type for 409 status", () => {
-            const eventType = element.logTypeForFetchError({ status: 409 });
-
-            assert.equal(eventType, "error");
+            element.logFetchError({message: "Request rejected with status 400", status: 400, responseText: "Company id was not provided"});
+            assert.isTrue(riseElement.log.calledWith("error", "request error", {errorCode: "E000000095"}, {error: "Request rejected with status 400", status: 400, responseText: "Company id was not provided"}));
           });
         });
 
