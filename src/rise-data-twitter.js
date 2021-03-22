@@ -212,28 +212,52 @@ export default class RiseDataTwitter extends FetchMixin(fetchBase) {
     return `${this._getUsername()}_${this.maxitems}`;
   }
 
-  logTypeForFetchError(error) {
-    if (!error || !error.status) {
-      return RiseDataTwitter.LOG_TYPE_ERROR;
+  logFetchError( err ) {
+    const details = super.eventDetailFor( err );
+
+    if ( err && err.isOffline ) {
+      super.log( RiseDataTwitter.LOG_TYPE_WARNING, "client offline", null, details );
+    } else {
+      const errorCode = this._errorCodeForFetchError( err );
+
+      super.log( RiseDataTwitter.LOG_TYPE_ERROR, "request error", { errorCode }, details );
+    }
+  }
+
+  _errorCodeForFetchError(error) {
+    if (!error || !error.status || error.status === 0) {
+      // Could not connect to the Twitter Service
+      return "E000000037";
     }
 
-    // Invalid/missing credentials or quota exceeded should not affect component reliability
-    if (
-      error.status === RiseDataTwitter.FORBIDDEN_ERROR ||
-      error.status === RiseDataTwitter.TOO_MANY_REQUESTS_ERROR
-    ) {
-      return RiseDataTwitter.LOG_TYPE_WARNING;
+    if (error.status === RiseDataTwitter.BAD_REQUEST_ERROR) {
+      // The Twitter component sent an invalid request to the Twitter Service.
+      return "E000000095";
     }
 
-    // Invalid username should not affect component reliability
-    if (
-      error.status === RiseDataTwitter.NOT_FOUND_ERROR && error.responseText &&
-      error.responseText.startsWith("Username not found:")
-    ) {
-      return RiseDataTwitter.LOG_TYPE_WARNING;
+    if (error.status === RiseDataTwitter.FORBIDDEN_ERROR) {
+      // Twitter authentication credentials are missing or have expired.
+      return "E000000096";
     }
 
-    return RiseDataTwitter.LOG_TYPE_ERROR;
+    if (error.status === RiseDataTwitter.NOT_FOUND_ERROR && error.responseText && error.responseText.startsWith("Username not found:")) {
+      // The Twitter Username could not be found.
+      return "E000000099";
+    }
+
+    if (error.status === RiseDataTwitter.TOO_MANY_REQUESTS_ERROR) {
+      // The Twitter Account has reached the quota limit for the statuses/user_timeline API within 15 minute window.
+      return "E000000097";
+    }
+
+    /*
+    This error code E000000098 is a catch all for problems with the Twitter Service. Possible issues are:
+      - general unexpected problems with Twitter Service (500)
+      - when presentation data not found from Core with the presentation id used in request (404)
+      - a concurrent request for user timeline is loading and is severely delayed in completing (409)
+      - any status codes unaccounted for
+     */
+    return "E000000098";
   }
 
   getCacheRequestKey() {
