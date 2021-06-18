@@ -280,7 +280,7 @@ workflows:
               only:
                 - build/stable
       - test-e2e-electron:
-          displayId: Z8RSGWXE8KR8
+          displayId: FR8H572DPG3W
           installerPath: /beta/
           name: test-e2e-electron-beta
           requires:
